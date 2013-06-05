@@ -11,5 +11,9 @@
     "url": "git://github.com/ecto/emerald.git"
   },
   "author": "ecto",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "colors": "0.6.0-1",
+    "emerald-ejs": "0.0.0"
+  }
 }
