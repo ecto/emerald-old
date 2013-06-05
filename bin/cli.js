@@ -42,5 +42,6 @@ function copyBoilerplate (name) {
     }
 
     console.log('done!');
+    process.exit();
   });
 }
