@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "an opinionated web framework",
   "main": "emerald.js",
+  "bin": {
+    "emerald": "bin/cli.js"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/ecto/emerald.git"
@@ -10,7 +13,10 @@
   "author": "ecto",
   "license": "MIT",
   "dependencies": {
+    "ncp": "0.4.2",
     "colors": "0.6.0-1",
-    "emerald-ejs": "0.0.0"
+    "commander": "1.1.1",
+    "emerald-ejs": "0.0.0",
+    "emerald-boilerplate": "0.0.0"
   }
 }
