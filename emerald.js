@@ -101,7 +101,7 @@ Core.prototype.log = function (level, message) {
 Core.prototype.listen = function (callback) {
   var that = this;
 
-  this.server.listen(this.port, '127.0.0.1', function () {
+  this.server.listen(this.port, '0.0.0.0', function () {
     that.log('', '\bemerald'.green + ' listening on port ' + that.port.toString().blue);
     callback && callback.apply(arguments);
   });
