@@ -1,7 +1,7 @@
-
 var fs = require('fs');
 var url = require('url');
 var http = require('http');
+var mime = require('mime');
 var colors = require('colors');
 
 module.exports = function emerald (options) {
@@ -77,8 +77,10 @@ Core.prototype.defineHandler = function () {
       return;
     }
 
-    res.writeHead(404);
-    res.end('Cannot ' + req.method + ' ' + req.url + '\n');
+    core.handleStatic(req, res, function () {
+      res.writeHead(404);
+      res.end('Cannot ' + req.method + ' ' + req.url + '\n');
+    });
   };
 };
 
@@ -125,6 +127,31 @@ Core.prototype.use = function (name) {
 
   this.plugins.push(plugin);
 };
+
+Core.prototype.handleStatic = function (req, res, cb) {
+  var file = 'public' + req.pathname;
+
+  // this may not be necessary
+  // but it makes me feel good
+  if (~file.indexOf('..')) {
+    cb();
+    return;
+  }
+
+  fs.exists(file, function (exists) {
+    if (!exists) {
+      cb();
+      return;
+    }
+
+    fs.readFile(file, function (err, data) {
+      if (err) throw err;
+      var mimetype = mime.lookup(file); 
+      res.setHeader('content-type', mimetype);
+      res.end(data);
+    });
+  });
+}
 
 function augment (req, res) {
   var info = url.parse(req.url);
