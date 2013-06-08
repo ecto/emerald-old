@@ -23,7 +23,8 @@ Core.prototype.start = function () {
   this.loadRoutes();
   this.defineHandler();
 
-  this.use('emerald-ejs');
+  this.use('url');
+  this.use('ejs');
 
   this.server = http.createServer(this.handler);
 };
@@ -62,17 +63,16 @@ Core.prototype.defineHandler = function () {
   var core = this;
 
   this.handler = function (req, res) {
-    augment(req, res);
+    core.plugins.forEach(function (plugin) {
+      plugin(req, res);
+    });
+
     var route = core.routes[req.pathname];
     core.log(req.method, req.url);
 
     // this data structure needs to be reworked
     // for dynamic routes, e.g. /user/:username
     if (route && route[req.method]) {
-      core.plugins.forEach(function (plugin) {
-        plugin(req, res);
-      });
-
       route[req.method](req, res);
       return;
     }
@@ -119,7 +119,7 @@ Core.prototype.createRoute = function (method, route, callback) {
 
 Core.prototype.use = function (name) {
   try {
-    var plugin = require(name);
+    var plugin = require('emerald-' + name);
   } catch (e) {
     this.log('fatal', e.message);
     process.exit(1);
@@ -153,28 +153,3 @@ Core.prototype.handleStatic = function (req, res, cb) {
   });
 }
 
-function augment (req, res) {
-  var info = url.parse(req.url);
-  for (var i in info) {
-    req[i] = info[i];
-  }
-
-  req.params = {};
-
-  return req;
-}
-
-function augmentResponse (rawRes) {
-  var res = rawRes;
-
-  // execute middleware
-  res.send = function () {
-
-  };
-
-  res.render = function (view, locals) {
-    res.end('hi\n');
-  };
-
-  return res;
-}
