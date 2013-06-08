@@ -121,7 +121,7 @@ Core.prototype.use = function (name) {
   try {
     var plugin = require('emerald-' + name);
   } catch (e) {
-    this.log('fatal', e.message);
+    this.log('fatal', e.stack);
     process.exit(1);
   }
 
