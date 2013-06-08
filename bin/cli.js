@@ -24,6 +24,15 @@ program
     });
   });
 
+program
+  .command('start')
+  .description('start an emerald server in the current directory')
+  .action(function (name) {
+    // TODO config
+    var app = process.app = require('../')();
+    app.listen();
+  });
+
 if (!process.argv[2]) {
   kill();
 }
